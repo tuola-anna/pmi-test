@@ -1,8 +1,11 @@
-ruff 
+ruff>=0.18.0  
 pytest
-mypy
-# Types for type checking (mypy)
-numpy-stubs
-pandas-stubs
+mypy>=1.11.0  
+
+# --- БИБЛИОТЕКИ ДЛЯ ПРОВЕРКИ ТИПОВ (Stub packages) ---
+numpy
+pandas
+numpy.typing    
+pandas-stubs    
 types-requests
 types-python-dateutil
