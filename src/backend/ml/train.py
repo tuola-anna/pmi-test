@@ -1,23 +1,25 @@
 import joblib
 import matplotlib
+
 matplotlib.use('Agg')
+import os
+
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
+import shap
+from catboost import CatBoostRegressor
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
-from sklearn.base import BaseEstimator, TransformerMixin
-from catboost import CatBoostRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-import shap
-import os
+
 
 # =============================================================================
 # 1. Кастомный трансформер для создания взаимодействия (Interaction)
 # =============================================================================
 class FeatureInteraction(BaseEstimator, TransformerMixin):
-    def __init__(self, col1: str, col2: str, feature_columns: list = None):
+    def __init__(self, col1: str, col2: str, feature_columns: list | None = None):
         self.col1 = col1
         self.col2 = col2
         self.feature_columns = feature_columns or FEATURE_COLUMNS
@@ -173,7 +175,7 @@ def main():
     pmis_pipeline = build_pipeline()
 
     # Обучение и оценка
-    metrics = train_model(pmis_pipeline, X_train, y_train, X_test, y_test)
+    train_model(pmis_pipeline, X_train, y_train, X_test, y_test)
 
     # Сохранение модели
     model_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'model.pkl')
