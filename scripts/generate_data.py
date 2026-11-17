@@ -60,7 +60,7 @@ def generate_data(n_periods: int = 120) -> pd.DataFrame:
         "inflation_lag1",
         "oil_price_lag1",
         "pmi",
-        ]
+    ]
     data[float_cols] = data[float_cols].astype("float32")
 
     # 7. Порядок колонок
