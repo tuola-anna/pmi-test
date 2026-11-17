@@ -1,6 +1,6 @@
-ruff>=0.18.0  
+ruff 
 pytest
-mypy>=1.11.0  
+mypy  
 
 # --- БИБЛИОТЕКИ ДЛЯ ПРОВЕРКИ ТИПОВ (Stub packages) ---
 numpy
