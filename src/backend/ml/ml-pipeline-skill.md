@@ -6,6 +6,15 @@ description: Правила построения ML-модели и произв
 ## Goal (Цель)
 Обучение модели `CatBoost` с использованием `sklearn Pipeline` для обеспечения воспроизводимости (Reproducibility) и защиты от утечки данных (Data Leakage). 
 Обеспечение интерпретируемости модели для аналитиков через визуализацию важности признаков.
+## Dependency Management (Управление зависимостями)
+1.  **Файл:** Использовать `requirements.txt`.
+2.  **Актуальность:** Запрещено писать версии библиотек "из головы". 
+    *   *Как правильно:* Активация `venv` -> `pip install package` -> `pip freeze > requirements.txt`.
+3.  **Разделение:** 
+    *   Для разработки (линтеры, тесты) используется `requirements-dev.txt`.
+    *   В `requirements.txt` для продакшена должны быть только библиотеки для запуска: `fastapi`, `uvicorn`, `catboost`, `joblib`, `pydantic`, `numpy`, `pandas`.
+4.  **Запрет:** Не использовать `poetry` или `pipenv`. Стандарт — чистый `requirements.txt`.
+
 ## Modeling Strategy
 1.  **Алгоритм:** `CatBoostRegressor`.
 2.  **Метрики:** `RMSE`, `MAE`, `MAPE`.
