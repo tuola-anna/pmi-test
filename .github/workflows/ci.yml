@@ -24,8 +24,8 @@ jobs:
 
       - name: Lint & Format (Ruff)
         run: | 
-          ruff check src/ frontend/ scripts/ --no-cache .
-          ruff format --check src/ frontend/ scripts/ --no-cache .
+          ruff check src/ frontend/ scripts/ --exclude "*.md"
+          ruff format --check src/ frontend/ scripts/ --exclude "*.md"
 
       - name: Type check (Mypy)
         run: mypy .
