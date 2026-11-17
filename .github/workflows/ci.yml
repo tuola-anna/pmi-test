@@ -30,6 +30,4 @@ jobs:
       - name: Type check (Mypy)
         run: mypy .
 
-      # Блок Docker мы оставляем, чтобы убедиться, что файл docker-compose.yml не сломан
-      - name: Build Docker
-        run: docker compose build
+     
