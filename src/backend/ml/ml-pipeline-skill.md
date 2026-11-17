@@ -56,7 +56,7 @@ pmis_pipeline.fit(X_train, y_train)
 # 4. СОХРАНЕНИЕ (Обязательный шаг)
 ## Сохраняем весь объект Pipeline целиком
 ```python
-joblib.dump(pmis_pipeline, 'model.pkl')
+joblib.dump(pmis_pipeline, "model.pkl")
 print("Model pipeline successfully saved to model.pkl")
 ```
 # 5. Интерпретация (Пример)
