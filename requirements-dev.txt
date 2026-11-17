@@ -1,3 +1,8 @@
 ruff 
 pytest
 mypy
+# Types for type checking (mypy)
+numpy-stubs
+pandas-stubs
+types-requests
+types-python-dateutil
