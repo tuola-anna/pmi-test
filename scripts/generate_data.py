@@ -16,12 +16,14 @@ def generate_data(n_periods: int = 120) -> pd.DataFrame:
     np.random.seed(42)
 
     # 1. Генерация сырых признаков (uniform distribution)
-    data = pd.DataFrame({
+    data = pd.DataFrame(
+        {
         "inflation": np.random.uniform(2.0, 15.0, n_periods),
         "key_rate": np.random.uniform(7.0, 21.0, n_periods),
         "oil_price": np.random.uniform(40.0, 100.0, n_periods),
         "consumer_confidence": np.random.uniform(80.0, 120.0, n_periods),
-    })
+    }
+    )
 
     # 2. Даты — n месяцев назад от текущей даты
     data["date"] = pd.date_range(
@@ -50,13 +52,26 @@ def generate_data(n_periods: int = 120) -> pd.DataFrame:
     data["pmi"] = np.clip(pmi_raw, 0, 100)
 
     # 6. float32 для экономии памяти
-    float_cols = ["inflation", "key_rate", "oil_price", "consumer_confidence",
-                  "inflation_lag1", "oil_price_lag1", "pmi"]
+    float_cols = [
+        "inflation", 
+        "key_rate", 
+        "oil_price", 
+        "consumer_confidence",
+        "inflation_lag1", 
+        "oil_price_lag1", 
+        "pmi"]
     data[float_cols] = data[float_cols].astype("float32")
 
     # 7. Порядок колонок
-    data = data[["date", "inflation", "key_rate", "oil_price",
-                 "consumer_confidence", "inflation_lag1", "oil_price_lag1", "pmi"]]
+    data = data[[
+        "date", 
+        "inflation", 
+        "key_rate", 
+        "oil_price",
+        "consumer_confidence", 
+        "inflation_lag1", 
+        "oil_price_lag1", 
+        "pmi"]]
 
     return data
 
