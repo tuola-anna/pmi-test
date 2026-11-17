@@ -22,12 +22,11 @@ def generate_data(n_periods: int = 120) -> pd.DataFrame:
             "key_rate": np.random.uniform(7.0, 21.0, n_periods),
             "oil_price": np.random.uniform(40.0, 100.0, n_periods),
             "consumer_confidence": np.random.uniform(80.0, 120.0, n_periods),
-    }
+        }
     )
 
     # 2. Даты — n месяцев назад от текущей даты
-    data["date"] = pd.date_range(end=pd.Timestamp.today(), periods=n_periods, freq="MS"
-    )
+    data["date"] = pd.date_range(end=pd.Timestamp.today(), periods=n_periods, freq="MS")
 
     # 3. Лаги (векторизовано)
     data["inflation_lag1"] = data["inflation"].shift(1).fillna(data["inflation"])
@@ -60,20 +59,21 @@ def generate_data(n_periods: int = 120) -> pd.DataFrame:
         "consumer_confidence",
         "inflation_lag1",
         "oil_price_lag1",
-        "pmi"]
+        "pmi",
+        ]
     data[float_cols] = data[float_cols].astype("float32")
 
     # 7. Порядок колонок
     data = data[
         [
-            "date", 
-            "inflation", 
-            "key_rate", 
+            "date",
+            "inflation",
+            "key_rate",
             "oil_price",
-            "consumer_confidence", 
-            "inflation_lag1", 
-            "oil_price_lag1", 
-            "pmi"
+            "consumer_confidence",
+            "inflation_lag1",
+            "oil_price_lag1",
+            "pmi",
         ]
     ]
 
