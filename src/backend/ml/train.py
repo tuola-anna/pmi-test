@@ -1,9 +1,6 @@
 import joblib
 import matplotlib
-
-matplotlib.use('Agg')
 import os
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -14,12 +11,32 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import RobustScaler
 
+matplotlib.use("Agg")
+
+# =============================================================================
+# Module-level constants
+# =============================================================================
+FEATURE_COLUMNS = [
+    "inflation",
+    "key_rate",
+    "oil_price",
+    "consumer_confidence",
+    "inflation_lag1",
+    "oil_price_lag1",
+]
+TARGET_COLUMN = "pmi"
+
 
 # =============================================================================
 # 1. Кастомный трансформер для создания взаимодействия (Interaction)
 # =============================================================================
 class FeatureInteraction(BaseEstimator, TransformerMixin):
-    def __init__(self, col1: str, col2: str, feature_columns: list | None = None):
+    def __init__(
+        self,
+        col1: str,
+        col2: str,
+        feature_columns: list | None = None,
+    ):
         self.col1 = col1
         self.col2 = col2
         self.feature_columns = feature_columns or FEATURE_COLUMNS
@@ -54,19 +71,14 @@ class FeatureInteraction(BaseEstimator, TransformerMixin):
 def load_data(data_path: str = "data/raw/macro.csv") -> pd.DataFrame:
     """Загрузка макроэкономических данных из CSV."""
     df = pd.read_csv(data_path)
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.sort_values('date').reset_index(drop=True)
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values("date").reset_index(drop=True)
     return df
 
 
 # =============================================================================
 # 3. Разделение на признаки и целевую переменную
 # =============================================================================
-FEATURE_COLUMNS = ['inflation', 'key_rate', 'oil_price', 'consumer_confidence',
-                   'inflation_lag1', 'oil_price_lag1']
-TARGET_COLUMN = 'pmi'
-
-
 def prepare_features(df: pd.DataFrame):
     """Подготовка матрицы признаков и целевой переменной."""
     X = df[FEATURE_COLUMNS].copy()
@@ -79,15 +91,25 @@ def prepare_features(df: pd.DataFrame):
 # =============================================================================
 def build_pipeline():
     """Сборка sklearn Pipeline с RobustScaler, FeatureInteraction и CatBoost."""
-    pmis_pipeline = Pipeline([
-        ('scaler', RobustScaler()),
-        ('interaction', FeatureInteraction('inflation', 'key_rate', FEATURE_COLUMNS)),
-        ('regressor', CatBoostRegressor(
-            verbose=0,
-            random_state=42,
-            allow_writing_files=False
-        ))
-    ])
+    pmis_pipeline = Pipeline(
+        [
+            ("scaler", RobustScaler()),
+            (
+                "interaction",
+                FeatureInteraction(
+                    "inflation", "key_rate", FEATURE_COLUMNS
+                ),
+            ),
+            (
+                "regressor",
+                CatBoostRegressor(
+                    verbose=0,
+                    random_state=42,
+                    allow_writing_files=False,
+                ),
+            ),
+        ]
+    )
     return pmis_pipeline
 
 
@@ -103,7 +125,7 @@ def train_model(pipeline, X_train, y_train, X_test, y_test):
     mae = mean_absolute_error(y_test, y_pred)
     mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
 
-    metrics = {'RMSE': rmse, 'MAE': mae, 'MAPE': mape}
+    metrics = {"RMSE": rmse, "MAE": mae, "MAPE": mape}
 
     print("\n" + "=" * 50)
     print("МЕТРИКИ МОДЕЛИ НА TEST SET")
@@ -132,7 +154,7 @@ def generate_shap_plot(pipeline, X_train, output_dir: str = "reports"):
     """Построение и сохранение SHAP beeswarm plot."""
     os.makedirs(output_dir, exist_ok=True)
 
-    regressor = pipeline.named_steps['regressor']
+    regressor = pipeline.named_steps["regressor"]
     # Пропускаем X_train через трансформеры пайплайна (scaler + interaction)
     X_transformed = pipeline[:-1].transform(X_train)
 
@@ -141,7 +163,7 @@ def generate_shap_plot(pipeline, X_train, output_dir: str = "reports"):
 
     plot_path = os.path.join(output_dir, "shap_plot.png")
     shap.plots.beeswarm(shap_values, show=False)
-    plt.savefig(plot_path, bbox_inches='tight', dpi=150)
+    plt.savefig(plot_path, bbox_inches="tight", dpi=150)
     plt.close()
 
     print(f"SHAP plot successfully saved to {plot_path}")
@@ -152,7 +174,15 @@ def generate_shap_plot(pipeline, X_train, output_dir: str = "reports"):
 # =============================================================================
 def main():
     # Загрузка данных
-    data_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'raw', 'macro.csv')
+    data_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "..",
+        "data",
+        "raw",
+        "macro.csv",
+    )
     if not os.path.exists(data_path):
         data_path = "data/raw/macro.csv"
 
@@ -178,7 +208,13 @@ def main():
     train_model(pmis_pipeline, X_train, y_train, X_test, y_test)
 
     # Сохранение модели
-    model_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'model.pkl')
+    model_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "..",
+        "model.pkl",
+    )
     save_model(pmis_pipeline, model_path)
 
     # SHAP визуализация
