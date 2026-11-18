@@ -97,9 +97,7 @@ def build_pipeline():
             ("scaler", RobustScaler()),
             (
                 "interaction",
-                FeatureInteraction(
-                    "inflation", "key_rate", FEATURE_COLUMNS
-                ),
+                FeatureInteraction("inflation", "key_rate", FEATURE_COLUMNS),
             ),
             (
                 "regressor",
